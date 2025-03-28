@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function loginIndex()
+    {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
     public function login(Request $request)
     {
         $validated = $request->validate([
