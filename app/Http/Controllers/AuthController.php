@@ -9,31 +9,28 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
-            'mobile' => 'required|string|exists:users,mobile',
+        $validated = $request->validate([
+            'mobile' => 'required|exists:users,mobile',
             'password' => 'required|string'
         ]);
 
-        $credentials = $request->only('mobile', 'password');
-
-        $token = Auth::attempt(credentials: $credentials);
-
-        if (!$token) {
-            return response()->json(data: [
-                'status' => 'error',
-                'message' => 'Unauthorized'
-            ], status: 401);
+        if (count($request->all()) > count($validated)) {
+            return response()->json([
+                'error' => 'Only mobile and password fields are allowed'
+            ], 422);
         }
 
-        $user = Auth::user();
+        $credentials = $request->only('mobile', 'password');
 
-        return response()->json(data: [
-            'status' => 'success',
-            'user' => $user,
-            'authorization' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
+        if (!$token = auth('api')->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => auth('api')->user()
         ]);
     }
 }
