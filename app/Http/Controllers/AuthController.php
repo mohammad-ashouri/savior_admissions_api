@@ -9,7 +9,7 @@ class AuthController extends Controller
 {
     public function loginIndex()
     {
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['error' => 'Unauthorized - Try Again'], 401);
     }
     public function login(Request $request)
     {
