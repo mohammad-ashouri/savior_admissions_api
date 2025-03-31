@@ -9,6 +9,8 @@ class TuitionInvoiceDetail extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'tuition_invoice_details';
+
     protected $hidden = [
         'financial_manager_description',
         'tracking_code',

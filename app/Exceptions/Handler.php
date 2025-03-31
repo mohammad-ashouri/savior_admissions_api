@@ -9,18 +9,18 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e): \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
     {
         if ($request->expectsJson()) {
-            if ($exception instanceof AuthenticationException) {
+            if ($e instanceof AuthenticationException) {
                 return response()->json([
                     'message' => 'Token has expired. Please login again.',
                     'status' => 'token_expired'
                 ], 401);
             }
 
-            if ($exception instanceof NotFoundHttpException) {
-                if (str_contains($exception->getMessage(), 'login')) {
+            if ($e instanceof NotFoundHttpException) {
+                if (str_contains($e->getMessage(), 'login')) {
                     return response()->json([
                         'message' => 'Token has expired. Please login again.',
                         'status' => 'token_expired'
@@ -29,6 +29,6 @@ class Handler extends ExceptionHandler
             }
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }
