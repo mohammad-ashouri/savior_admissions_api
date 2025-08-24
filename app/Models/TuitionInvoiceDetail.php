@@ -18,6 +18,7 @@ class TuitionInvoiceDetail extends Model
         'invoice_id',
         'payment_details',
         'date_of_payment',
+        'reminder_sms',
         'editor',
         'created_at',
         'updated_at',
